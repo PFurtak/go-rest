@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/patrickfurtak/go-rest/handlers"
 )
@@ -18,5 +19,12 @@ func main() {
 	sm.Handle("/", hh)
 	sm.Handle("/goodbye", gh)
 
-	http.ListenAndServe(":9000", sm)
+	s := &http.Server{
+		Addr:         ":9000",
+		Handler:      sm,
+		IdleTimeout:  120 * time.Second,
+		ReadTimeout:  1 * time.Second,
+		WriteTimeout: 1 * time.Second,
+	}
+	s.ListenAndServe()
 }
